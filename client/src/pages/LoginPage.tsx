@@ -33,41 +33,58 @@ function LoginPage() {
     });
   };
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
+ const handleSubmit = async (
+  e: React.FormEvent
+) => {
+  e.preventDefault();
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const response =
-        await API.post(
-          "/auth/login",
-          formData
-        );
+    const response = await API.post(
+      "/auth/login",
+      formData
+    );
 
-      setAuth(
-        response.data.data,
-        response.data.token
-      );
+    console.log(response.data);
 
-      toast.success(
-        "Login successful"
-      );
+    const user =
+      response.data.user ||
+      response.data.data?.user;
 
-      navigate("/");
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data
-          ?.message ||
-          "Login failed"
-      );
-    } finally {
-      setLoading(false);
+    const token =
+      response.data.token ||
+      response.data.data?.token;
+
+    if (!token) {
+      toast.error("Token not found");
+      return;
     }
-  };
 
+    localStorage.setItem(
+      "token",
+      token
+    );
+
+    setAuth(user, token);
+
+    toast.success(
+      "Login successful"
+    );
+
+    navigate("/");
+  } catch (error: any) {
+    console.log(error);
+
+    toast.error(
+      error?.response?.data
+        ?.message ||
+        "Login failed"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8">
