@@ -1,6 +1,7 @@
 import app from "./app";
 
 import connectDB from "./config/db";
+import cors from "cors";
 
 const PORT = process.env.PORT || 5000;
 
@@ -13,6 +14,13 @@ const startServer = async () => {
     await connectDB();
 
     console.log("Database connected");
+
+    app.use(
+  cors({
+    origin: "https://gig-flow-smart-leads-dashboard-olive.vercel.app",
+    credentials: true,
+  })
+);
 
     app.listen(PORT, () => {
       console.log(
