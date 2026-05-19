@@ -18,7 +18,12 @@ import leadRoutes from "./routes/lead.routes";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://gig-flow-smart-leads-dashboard-olive.vercel.app",
+    credentials: true,
+  })
+);
 
 app.use(helmet());
 
